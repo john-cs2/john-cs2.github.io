@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>MathMon — Aventura matemática</title>
+<style>
+:root{--bg:#101827;--panel:#182438;--panel2:#213149;--line:#344761;--ink:#f3f6ff;--muted:#aab8ce;--gold:#ffd166;--mint:#72e0bd;--red:#ff7185;--blue:#82b7ff;--purple:#c4a2ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#2a4261 0,transparent 48%),var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:#263b57;color:var(--ink);border-radius:12px;padding:10px 14px;font-weight:700;transition:.16s}button:hover{filter:brightness(1.15);transform:translateY(-1px)}button:disabled{opacity:.4;cursor:not-allowed;transform:none}.primary{background:linear-gradient(135deg,#397bd5,#6554c8);border:0}.success{background:#1e6a5a;border-color:#348d79}.danger{background:#74384a;border-color:#a54b61}.gold{color:var(--gold)}
+.wrap{max-width:1120px;margin:auto;padding:20px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#f8cf65,#ed8c55);display:grid;place-items:center;font-size:27px;box-shadow:0 7px 22px #0005}.brand h1{font-size:22px;line-height:1;margin:0}.brand small{color:var(--muted)}.topstats{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.pill{background:#1b2b40;border:1px solid var(--line);padding:7px 11px;border-radius:999px;color:var(--muted);font-size:13px}.pill b{color:var(--ink)}
+.layout{display:grid;grid-template-columns:250px 1fr;gap:16px}.side,.main{background:linear-gradient(160deg,#1b2a40,#152235);border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 36px #0002}.side{padding:16px;align-self:start}.main{padding:20px;min-height:620px}.hero{display:flex;align-items:center;gap:14px;padding:14px;background:#22354d;border:1px solid #3a526e;border-radius:15px;margin-bottom:15px}.avatar{font-size:48px;filter:drop-shadow(0 5px 4px #0005)}.hero h2{margin:0;font-size:18px}.muted{color:var(--muted)}.tiny{font-size:12px;color:var(--muted)}.bar{height:9px;background:#0e1928;border-radius:99px;overflow:hidden;margin-top:6px}.bar>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#42c99a,#8ce5ba);width:50%;transition:width .25s}.bar.xp>i{background:linear-gradient(90deg,#558be8,#b18bff)}.statrow{display:flex;justify-content:space-between;font-size:12px;margin-top:12px;color:var(--muted)}.nav{display:grid;gap:7px;margin-top:16px}.nav button{text-align:left;background:transparent;border-color:transparent;color:var(--muted)}.nav button.active,.nav button:hover{background:#2a3e59;border-color:#45617f;color:white}.sidefoot{border-top:1px solid var(--line);margin-top:16px;padding-top:13px;display:flex;gap:7px}.sidefoot button{flex:1;font-size:12px;padding:8px 6px}
+h2,h3,p{margin-top:0}h2{font-size:23px;margin-bottom:6px}h3{font-size:16px;margin-bottom:8px}.sub{color:var(--muted);margin-bottom:18px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.card{background:#1e3048;border:1px solid var(--line);border-radius:15px;padding:14px}.card h3{margin:0 0 6px}.bigemoji{font-size:35px}.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.tag{display:inline-block;padding:3px 8px;border-radius:999px;background:#304761;color:#c8d8ec;font-size:11px;font-weight:700}.locked{opacity:.48;filter:saturate(.5)}.zone-card{display:flex;gap:12px;align-items:center;min-height:105px}.zone-card .bigemoji{font-size:38px}.zone-card button{margin-left:auto;white-space:nowrap}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.battle{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0}.combatant{background:linear-gradient(150deg,#243a56,#1a2a40);border:1px solid #3b5573;border-radius:16px;padding:15px;text-align:center}.monster{font-size:78px;line-height:1.2;filter:drop-shadow(0 9px 5px #0005)}.healthline{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px}.question{padding:18px;border:1px solid #486487;background:#213852;border-radius:16px;margin:14px 0}.equation{font-size:28px;font-weight:800;text-align:center;padding:12px;color:#fff}.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.answers button{font-size:17px;padding:13px}.feedback{min-height:26px;margin-top:12px;font-weight:700}.good{color:var(--mint)}.bad{color:var(--red)}.notice{padding:12px 14px;border-radius:12px;background:#2a3e56;border:1px solid #49617c;color:#dce8f8;margin:12px 0}.mission{display:flex;align-items:center;gap:12px}.mission>div:nth-child(2){flex:1}.modalback{position:fixed;inset:0;background:#050b14c9;display:grid;place-items:center;padding:18px;z-index:5}.modal{max-width:470px;width:100%;background:#1b2b40;border:1px solid #58708e;border-radius:18px;padding:22px;box-shadow:0 20px 80px #0009}.modal h2{margin-top:0}.input{width:100%;padding:13px;border-radius:10px;border:1px solid #58708e;background:#0e1a2a;color:white;margin:8px 0 12px}.hidden{display:none!important}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#213b54;border:1px solid #6080a2;padding:11px 16px;border-radius:12px;z-index:8;box-shadow:0 8px 30px #0008}.footer{text-align:center;color:#72839c;font-size:11px;margin-top:16px}
+@media(max-width:760px){.wrap{padding:12px}.layout{grid-template-columns:1fr}.side{padding:12px}.hero{margin-bottom:10px}.nav{grid-template-columns:repeat(3,1fr);gap:4px}.nav button{text-align:center;font-size:12px;padding:8px 4px}.sidefoot{margin-top:10px}.main{padding:15px;min-height:560px}.top{align-items:flex-start}.topstats{max-width:48%}.brand h1{font-size:19px}.grid3{grid-template-columns:1fr 1fr}}
+@media(max-width:430px){.battle{grid-template-columns:1fr 1fr;gap:7px}.combatant{padding:10px}.monster{font-size:55px}.equation{font-size:23px}.answers{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.pill{font-size:11px;padding:6px 8px}}
+
+.devbanner{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;border-radius:14px;background:linear-gradient(90deg,#3b2a63,#2b3f66);border:1px solid #8b6fe0;animation:devglow 2.6s ease-in-out infinite}.devbanner b{color:var(--gold)}
+@keyframes devglow{0%,100%{box-shadow:0 0 12px #8b6fe055}50%{box-shadow:0 0 28px #8b6fe0aa}}
+body.devon .logo{box-shadow:0 0 0 3px #8b6fe0,0 7px 22px #0005}.nav button.devbtn{border-color:#3d3566}body.devon .nav button.devbtn{color:var(--gold);border-color:#8b6fe0}
+.errmsg{color:var(--red);font-weight:700;min-height:22px;margin:-4px 0 8px}.shake{animation:shake .35s}@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+select.input{appearance:auto}.devstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.devstats div{background:#17263a;border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;font-size:12px;color:var(--muted)}.devstats b{display:block;font-size:16px;color:var(--ink)}
+.dexhead{background:linear-gradient(120deg,#294c61,#2b3560);margin-bottom:6px}.dexpct{font-size:34px;font-weight:900;color:var(--gold)}.dexbar{height:14px;margin-top:10px}.dexbar>i{background:linear-gradient(90deg,#ffd166,#72e0bd)}
+.dexzone{margin:22px 0 10px;display:flex;justify-content:space-between;align-items:center;gap:10px}.dexzone h3{margin:0}
+.dexgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.dexcard{position:relative;background:linear-gradient(160deg,#233853,#182a40);border:1px solid var(--line);border-radius:16px;padding:14px;overflow:hidden;animation:dexin .45s ease both;transition:transform .2s,border-color .2s}.dexcard:hover{transform:translateY(-3px);border-color:#5e7fa5}.dexcard.found{border-color:#4a8f7c}.dexcard.boss.found{border-color:var(--gold)}.dexcard.found::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#ffffff14,transparent);animation:shine 4.5s ease-in-out infinite}
+@keyframes dexin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@keyframes shine{0%,60%{left:-60%}100%{left:130%}}@keyframes float{50%{transform:translateY(-5px)}}@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:none;opacity:1}}
+.dexnum{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.06em}.tagok{background:#1e6a5a;color:#d9fff3}.dexpic{font-size:64px;text-align:center;line-height:1.3;margin:6px 0;animation:float 3.4s ease-in-out infinite;filter:drop-shadow(0 6px 4px #0005)}.dexpic.sil{filter:brightness(0) invert(.28);animation:none}
+.dexcard h3{margin:0 0 4px}.dexweak{margin-top:8px;padding:9px 10px;border-radius:10px;background:#2a3e56;border:1px solid #49617c}.dexweak b{color:var(--gold)}.dexweak.lock{border-style:dashed;opacity:.8}
+.dexnew{margin:14px 0;padding:12px;border-radius:12px;background:linear-gradient(120deg,#2d4a43,#2b3f66);border:1px solid #4a8f7c;animation:pop .5s ease;text-align:left}
+@media(max-width:430px){.dexgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.dexcard{padding:10px}.dexpic{font-size:48px}.devstats{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.dexcard,.dexpic,.devbanner,.dexcard::after{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div id="devBanner" class="devbanner hidden"><span>🛠️ <b>MODO DESARROLLADOR ACTIVO</b> · tu progreso normal está protegido</span><button class="danger" id="devLogoutBtn">🚪 Cerrar sesión</button></div>
+<header class="top">
+ <div class="brand"><div class="logo">∑</div><div><h1>MathMon</h1><small>Una aventura de números y monstruos</small></div></div>
+ <div class="topstats"><span class="pill">🪙 <b id="coinsTop">0</b></span><span class="pill">🧪 <b id="potionsTop">0</b></span><span class="pill">📍 <b id="zoneTop">Pradera Numérica</b></span></div>
+</header>
+<div class="layout">
+<aside class="side">
+ <div class="hero"><div class="avatar">🧙</div><div><h2 id="heroName">Aventurero</h2><div class="tiny" id="levelLabel">Nivel 1 · Novato</div></div></div>
+ <div class="statrow"><span>❤️ Salud</span><b id="hpText">100 / 100</b></div><div class="bar"><i id="hpBar"></i></div>
+ <div class="statrow"><span>✨ Experiencia</span><b id="xpText">0 / 50</b></div><div class="bar xp"><i id="xpBar"></i></div>
+ <div class="grid2" style="margin-top:14px"><div class="card"><div class="tiny">⚔️ Ataque</div><b id="attackText">10</b></div><div class="card"><div class="tiny">🛡️ Defensa</div><b id="defenseText">2</b></div></div>
+ <nav class="nav">
+  <button class="active" data-page="home">🏕️ Campamento</button>
+  <button data-page="world">🗺️ Mundo</button>
+  <button data-page="battle">⚔️ Combate</button>
+  <button data-page="skills">📘 Operaciones</button>
+  <button data-page="missions">📜 Misiones</button>
+  <button data-page="bag">🎒 Mochila</button>
+  <button data-page="bestiary">📖 Bestiario</button>
+  <button data-page="dev" class="devbtn">🛠️ Desarrollador</button>
+ </nav>
+ <div class="sidefoot"><button id="saveBtn">💾 Guardar</button><button id="resetBtn">↻ Reiniciar</button></div>
+</aside>
+<main class="main" id="main"></main>
+</div>
+<div class="footer">MathMon · Aprende, combate y sube de nivel · Tu progreso se guarda en este dispositivo</div>
+</div>
+<div id="modalRoot"></div><div id="toast" class="toast hidden"></div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const zones=[
+ {name:"Pradera Numérica",emoji:"🌱",min:1,max:5,desc:"Un valle tranquilo donde nacen los primeros retos.",unlock:1},
+ {name:"Bosque Algebraico",emoji:"🌲",min:6,max:10,desc:"Las incógnitas y las potencias despiertan entre los árboles.",unlock:6},
+ {name:"Montañas Funcionales",emoji:"🏔️",min:11,max:15,desc:"Funciones y cambios gobiernan estas cumbres.",unlock:11},
+ {name:"Caverna Integral",emoji:"💎",min:16,max:20,desc:"Derivadas e integrales protegen los cristales antiguos.",unlock:16},
+ {name:"Reino del Infinito",emoji:"🌌",min:21,max:25,desc:"El último territorio: límites y desafíos avanzados.",unlock:21}
+];
+const unlocks=[
+ {level:1,name:"Aritmética",desc:"Sumas, restas, multiplicaciones y divisiones."},
+ {level:3,name:"Potencias y raíces",desc:"Exponentes y raíces cuadradas."},
+ {level:5,name:"Álgebra",desc:"Ecuaciones y factorización sencilla."},
+ {level:8,name:"Funciones",desc:"Evaluación de funciones y patrones."},
+ {level:12,name:"Derivadas",desc:"Reglas básicas de derivación."},
+ {level:16,name:"Integrales",desc:"Antiderivadas inmediatas."},
+ {level:20,name:"Cálculo avanzado",desc:"Límites y retos combinados."}
+];
+const creatures=[
+ {z:0,n:"Baba Suma",e:"🟢",w:0,d:"Una masa verde que crece sumando todo lo que toca. La aritmética básica la deshace."},
+ {z:0,n:"Limo Restador",e:"🟡",w:0,d:"Cada golpe le quita masa: vive de restas. Las operaciones básicas lo agotan."},
+ {z:0,n:"Gólem del Producto",e:"🪨",w:0,d:"Filas por columnas de bloques idénticos. Multiplicar y dividir lo desarma."},
+ {z:0,n:"Slime de la Raíz",e:"🟩",w:1,d:"Un slime con forma de √ que se aferra al suelo. Potencias y raíces lo desarraigan."},
+ {z:0,n:"Esqueleto al Cuadrado",e:"💀",w:1,d:"Sus huesos forman cuadrados perfectos. Potencias y raíces lo desmontan."},
+ {z:0,n:"Rey Aritmético",e:"👑",w:0,boss:1,d:"Soberano de la Pradera: gobierna con las cuatro operaciones. La aritmética es la ley que lo derriba."},
+ {z:1,n:"Duende de la Incógnita",e:"👺",w:2,d:"Se esconde tras una letra misteriosa. Despejar la incógnita con álgebra lo deja al descubierto."},
+ {z:1,n:"Lobo Exponencial",e:"🐺",w:1,d:"Su manada se multiplica con exponentes. Las potencias frenan su crecimiento."},
+ {z:1,n:"Serpiente de la Raíz Cuadrada",e:"🐍",w:1,d:"Se enrosca como el símbolo √. Potencias y raíces la desenrollan."},
+ {z:1,n:"Orco Binomial",e:"👹",w:2,d:"Dos términos fundidos en un solo cuerpo. Factorizar con álgebra los separa."},
+ {z:1,n:"Mímico de la Ecuación",e:"📦",w:2,d:"Finge ser un cofre, pero encierra una ecuación. Despejar x abre la tapa."},
+ {z:1,n:"Dragón de la Ecuación",e:"🐲",w:2,boss:1,d:"Guardián del Bosque: cada escama es un término. El álgebra equilibra su ecuación."},
+ {z:2,n:"Avispa de la Función",e:"🐝",w:3,d:"Vuela de x a f(x): a cada entrada, una salida. Las funciones la atrapan."},
+ {z:2,n:"Gólem de la Parábola",e:"🧱",w:3,d:"Su cuerpo dibuja y = ax² + bx + c. Evaluar funciones lo quiebra."},
+ {z:2,n:"Halcón del Dominio",e:"🦅",w:3,d:"Solo vuela donde la función está definida. Quien domina las funciones conoce su territorio."},
+ {z:2,n:"Trol de la Pendiente",e:"🧌",w:4,d:"Su fuerza es la pendiente: cuánto cambia y por cada paso en x. Las derivadas miden ese cambio."},
+ {z:2,n:"Quimera Diferencial",e:"🦁",w:4,d:"Tres cabezas, un cambio infinitesimal dy/dx. Las derivadas la desarman."},
+ {z:2,n:"Coloso de la Función",e:"🦖",w:3,boss:1,d:"Un gigante que transforma cada paso en otro valor. Las funciones descifran su patrón."},
+ {z:3,n:"Eco Derivador",e:"🌀",w:4,d:"Repite tu tasa de cambio y la amplifica. Dominar las derivadas apaga su eco."},
+ {z:3,n:"Murciélago Tangente",e:"🦇",w:4,d:"Roza las curvas en un solo punto, como una recta tangente. Su pendiente se calcula derivando."},
+ {z:3,n:"Gárgola de la Integral",e:"🗿",w:5,d:"Acumula la piedra de cada instante bajo la curva. Las integrales la vuelven polvo."},
+ {z:3,n:"Dragón de la Antiderivada",e:"🐉",w:5,d:"Deshace derivadas para recuperar la función original. Las integrales rompen su ciclo."},
+ {z:3,n:"Guardián del Área",e:"🛡️",w:5,d:"Protege el área bajo la curva. Las integrales miden y conquistan ese territorio."},
+ {z:3,n:"Leviatán de la Integral Definida",e:"🐋",w:5,boss:1,d:"Acumula todo el área entre dos extremos. Solo las integrales vacían su océano."},
+ {z:4,n:"Espectro del Límite",e:"👻",w:6,d:"Se acerca sin cesar a un valor sin llegar a tocarlo. El cálculo avanzado lo materializa."},
+ {z:4,n:"Hidra del Infinito",e:"🐙",w:6,d:"Por cada cabeza cortada crecen infinitas más. Solo el cálculo avanzado la contiene."},
+ {z:4,n:"Titán de la Convergencia",e:"🦣",w:6,d:"Su tamaño converge término a término. Series y límites avanzados lo detienen."},
+ {z:4,n:"Fénix Asintótico",e:"🔥",w:6,d:"Se eleva hacia una asíntota que nunca alcanza. Los límites avanzados lo atrapan."},
+ {z:4,n:"Centinela Épsilon-Delta",e:"🧿",w:6,d:"Vigila que cada ε tenga su δ. Solo el rigor del cálculo avanzado lo supera."},
+ {z:4,n:"Devorador del Infinito",e:"🌑",w:6,boss:1,d:"Guardián final: consume todo lo que tiende a ∞. El cálculo avanzado es su único límite."}
+];
+creatures.forEach((c,i)=>c.id=i+1);
+const creatureById=id=>creatures.find(c=>c.id===id);
+const zoneEnemies=z=>creatures.filter(c=>c.z===z&&!c.boss);
+const zoneBoss=z=>creatures.find(c=>c.z===z&&c.boss);
+const pad=n=>String(n).padStart(3,"0");
+const BEST_KEY="mathmon-bestiary",DEV_USER="developer",DEV_PASS="mathmon-dev";
+let dev=false,normalBackup=null;
+function loadBest(){try{let o=JSON.parse(localStorage.getItem(BEST_KEY)||"{}");return {found:(o&&o.found&&typeof o.found==="object")?o.found:{}}}catch(e){return {found:{}}}}
+let best=loadBest();
+ const operationDamage=[10,17,24,32,41,51,63];
+ const operationNames=unlocks.map(u=>u.name);
+ const weaknessHints=["La criatura teme los cálculos básicos.","Las raíces y potencias desestabilizan a esta criatura.","La criatura es vulnerable al razonamiento algebraico.","Esta criatura depende de relaciones entre variables: usa funciones.","Sus cambios instantáneos la hacen vulnerable a las derivadas.","Su energía acumulada puede romperse con integrales.","Su vínculo con el infinito exige cálculo avanzado."];
+const defaults={name:"Aventurero",level:1,xp:0,hp:100,maxHp:100,attack:10,defense:2,coins:25,potions:2,zone:0,wins:0,explores:0,missions:{first:false,explore:false,streak:false,boss:false},missionClaimed:{},battle:null,seenIntro:false};
+const fresh=()=>({...defaults,missions:{...defaults.missions},missionClaimed:{}});
+let s=load();
+ if(s.battle && (typeof s.battle.weakness!=="number" || s.battle.weakness<0 || s.battle.weakness>6 || !creatureById(s.battle.cid)))s.battle=null;
+function load(){try{return {...fresh(),...JSON.parse(localStorage.getItem("mathmon-save")||"{}")}}catch(e){return fresh()}}
+function save(){if(dev)return toast("Modo desarrollador: el guardado está desactivado para proteger tu progreso");localStorage.setItem("mathmon-save",JSON.stringify(s));toast("Progreso guardado 💾")}
+function persistBest(){if(dev)return;try{localStorage.setItem(BEST_KEY,JSON.stringify(best))}catch(e){}}
+function persist(){if(dev)return;localStorage.setItem("mathmon-save",JSON.stringify(s))}
+function toast(msg){let t=$("toast");t.textContent=msg;t.classList.remove("hidden");clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.add("hidden"),2200)}
+function levelName(l){return l<3?"Novato":l<6?"Aprendiz":l<11?"Explorador":l<16?"Especialista":l<21?"Maestro":"Leyenda"}
+function xpNeed(){return 50+(s.level-1)*25}
+function update(){
+ $("heroName").textContent=s.name;$("levelLabel").textContent=`Nivel ${s.level} · ${levelName(s.level)}`;
+ $("hpText").textContent=`${s.hp} / ${s.maxHp}`;$("hpBar").style.width=Math.max(0,s.hp/s.maxHp*100)+"%";
+ $("xpText").textContent=`${s.xp} / ${xpNeed()}`;$("xpBar").style.width=(s.xp/xpNeed()*100)+"%";
+ $("attackText").textContent=s.attack;$("defenseText").textContent=s.defense;
+ $("coinsTop").textContent=s.coins;$("potionsTop").textContent=s.potions;$("zoneTop").textContent=zones[s.zone].name;
+}
+function setPage(page){if(page==="dev"&&!dev){showDevLogin();return}document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));({home,world,battle,skills,missions,bag,bestiary,dev:devPage}[page]||home)();currentPage=page}
+let currentPage="home";
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>setPage(b.dataset.page)));
+$("saveBtn").onclick=save;
+$("resetBtn").onclick=()=>{if(dev)return toast("Cierra la sesión de desarrollador antes de reiniciar");if(confirm("¿Borrar todo tu progreso y el Bestiario y empezar desde cero?")){localStorage.removeItem("mathmon-save");localStorage.removeItem(BEST_KEY);best={found:{}};s=fresh();showIntro();update();setPage("home")}};
+function render(html){$("main").innerHTML=html}
+function home(){
+ let next=unlocks.find(u=>u.level>s.level);
+ render(`<h2>🏕️ Campamento</h2><p class="sub">Tu aventura comienza aquí. Prepárate, mejora y explora el mundo.</p>
+ <div class="card" style="background:linear-gradient(120deg,#294c61,#29385d);margin-bottom:14px"><div class="row"><div><span class="tag">ZONA ACTUAL</span><h2 style="margin:8px 0">${zones[s.zone].emoji} ${zones[s.zone].name}</h2><p class="muted" style="margin:0">${zones[s.zone].desc}</p></div><div class="bigemoji">🧭</div></div><div class="actions"><button class="primary" onclick="MM.page('world')">Explorar mundo</button><button onclick="MM.startBattle()">Buscar combate ⚔️</button></div></div>
+ <div class="grid2">
+ <div class="card"><h3>📈 Tu progreso</h3><div class="statrow"><span>Combates ganados</span><b>${s.wins}</b></div><div class="statrow"><span>Exploraciones</span><b>${s.explores}</b></div><div class="statrow"><span>Monedas</span><b>${s.coins} 🪙</b></div></div>
+ <div class="card"><h3>🔓 Próximo desbloqueo</h3>${next?`<div class="bigemoji">📘</div><b>${next.name}</b><p class="tiny">${next.desc}</p><span class="tag">Nivel ${next.level}</span>`:`<div class="bigemoji">👑</div><b>Has dominado todas las operaciones</b><p class="tiny">El Reino del Infinito te espera.</p>`}</div>
+ </div><div class="notice">💡 Consejo: responde correctamente para atacar. Cada nivel aumenta tu salud máxima en 10 puntos y recupera toda tu vida.</div>`);
+}
+function world(){
+ render(`<h2>🗺️ Mundo MathMon</h2><p class="sub">Explora territorios, encuentra criaturas y consigue experiencia. Las nuevas zonas se abren al alcanzar su nivel.</p><div style="display:grid;gap:10px">${zones.map((z,i)=>`<div class="card zone-card ${s.level<z.unlock?'locked':''}"><div class="bigemoji">${z.emoji}</div><div style="flex:1"><h3>${z.name}</h3><p class="tiny">${z.desc}</p><span class="tag">${z.min===1?'Nivel 1':`Niveles ${z.min}–${z.max}`}</span></div>${s.level>=z.unlock?`<button class="${s.zone===i?'success':'primary'}" onclick="MM.enterZone(${i})">${s.zone===i?'Actual':'Entrar'}</button>`:`<span class="tag">🔒 Nivel ${z.unlock}</span>`}</div>`).join("")}</div>
+ <div class="card" style="margin-top:14px"><h3>🌿 Explorar alrededores</h3><p class="muted">Dedica un momento a recorrer la zona. Puedes encontrar monedas, pociones o experiencia.</p><button class="primary" onclick="MM.explore()">Explorar (10 🪙)</button></div>`);
+}
+function enterZone(i){if(s.level<zones[i].unlock)return toast("Necesitas nivel "+zones[i].unlock);s.zone=i;persist();update();world();toast("Has llegado a "+zones[i].name)}
+function explore(){
+ if(s.coins<10)return toast("No tienes suficientes monedas");
+ s.coins-=10;s.explores++;let r=Math.random(),msg,reward;
+ if(r<.45){let n=12+Math.floor(Math.random()*12);gainXP(n);msg=`Encontraste un antiguo cuaderno: +${n} XP`;}
+ else if(r<.75){let n=10+Math.floor(Math.random()*16);s.coins+=n;msg=`Hallaste una bolsa con ${n} monedas`;}
+ else{s.potions++;msg="Encontraste una poción 🧪";}
+ s.missions.explore=s.explores>=3;persist();update();world();toast(msg);
+}
+function skills(){
+ render(`<h2>📘 Biblioteca de operaciones</h2><p class="sub">Un solo aventurero puede aprender todas las ramas. Las operaciones se desbloquean al subir de nivel.</p><div style="display:grid;gap:10px">${unlocks.map(u=>{let open=s.level>=u.level;return `<div class="card ${open?'':'locked'}"><div class="row"><div><h3>${open?'🔓':'🔒'} ${u.name}</h3><p class="tiny">${u.desc}</p></div><span class="tag">${open?'Disponible':'Nivel '+u.level}</span></div></div>`}).join("")}</div><div class="notice">⚔️ En combate eliges la operación en cada turno. Cada criatura tiene una debilidad oculta: descúbrela experimentando y derrotándola. Se anotará en el Bestiario.</div>`);
+}
+function missions(){
+ const list=[
+  {id:"first",title:"Primer encuentro",desc:"Gana tu primer combate.",reward:"30 XP · 15 🪙",done:s.wins>=1,claim:s.missionClaimed.first,fn:()=>{gainXP(30);s.coins+=15}},
+  {id:"explore",title:"Curioso por naturaleza",desc:"Realiza 3 exploraciones.",reward:"35 XP · 20 🪙",done:s.explores>=3,claim:s.missionClaimed.explore,fn:()=>{gainXP(35);s.coins+=20}},
+  {id:"streak",title:"Entrenamiento constante",desc:"Gana 5 combates.",reward:"60 XP · 30 🪙",done:s.wins>=5,claim:s.missionClaimed.streak,fn:()=>{gainXP(60);s.coins+=30}},
+  {id:"boss",title:"Cazador de jefes",desc:"Derrota un jefe de zona.",reward:"100 XP · 50 🪙",done:s.missions.boss,claim:s.missionClaimed.boss,fn:()=>{gainXP(100);s.coins+=50}}
+ ];
+ render(`<h2>📜 Misiones</h2><p class="sub">Completa objetivos para ganar experiencia y monedas adicionales.</p><div style="display:grid;gap:10px">${list.map(m=>`<div class="card mission"><div class="bigemoji">${m.claim?'✅':m.done?'🎁':'📜'}</div><div><h3>${m.title}</h3><p class="tiny">${m.desc}</p><span class="tag">Recompensa: ${m.reward}</span></div><button ${!m.done||m.claim?'disabled':''} class="${m.done&&!m.claim?'success':''}" onclick="MM.claim('${m.id}')">${m.claim?'Reclamada':m.done?'Cobrar':'En curso'}</button></div>`).join("")}</div>`);
+}
+function claim(id){
+ const map={first:[s.wins>=1,()=>{gainXP(30);s.coins+=15}],explore:[s.explores>=3,()=>{gainXP(35);s.coins+=20}],streak:[s.wins>=5,()=>{gainXP(60);s.coins+=30}],boss:[s.missions.boss,()=>{gainXP(100);s.coins+=50}]};
+ if(!map[id]||!map[id][0]||s.missionClaimed[id])return;
+ s.missionClaimed[id]=true;map[id][1]();persist();update();missions();toast("¡Recompensa reclamada!");
+}
+function bag(){
+ render(`<h2>🎒 Mochila</h2><p class="sub">Tus objetos para continuar la aventura.</p><div class="grid2"><div class="card"><div class="bigemoji">🧪</div><h3>Poción de salud</h3><p class="muted">Recupera 40 puntos de vida. No supera tu salud máxima.</p><div class="row"><b>Tienes: ${s.potions}</b><button class="success" ${s.potions<1||s.hp===s.maxHp?'disabled':''} onclick="MM.usePotion()">Usar</button></div></div><div class="card"><div class="bigemoji">🪙</div><h3>Monedas</h3><p class="muted">Recompensas de combates, misiones y exploración.</p><b>${s.coins} monedas</b></div></div><div class="card" style="margin-top:12px"><h3>🛒 Puesto del campamento</h3><div class="row"><div><b>Poción de salud</b><div class="tiny">Recupera 40 HP</div></div><button onclick="MM.buyPotion()">Comprar · 25 🪙</button></div></div>`);
+}
+function usePotion(){if(s.potions<1||s.hp===s.maxHp)return;let before=s.hp;s.hp=Math.min(s.maxHp,s.hp+40);s.potions--;persist();update();bag();toast(`Recuperaste ${s.hp-before} HP`)}
+function buyPotion(){if(s.coins<25)return toast("Te faltan monedas");s.coins-=25;s.potions++;persist();update();bag();toast("Poción comprada 🧪")}
+function gainXP(n){
+ s.xp+=n;let levels=0;
+ while(s.xp>=xpNeed()&&s.level<25){s.xp-=xpNeed();s.level++;s.maxHp+=10;s.hp=s.maxHp;if(s.level%2===0)s.attack+=2;if(s.level%2===0)s.defense+=1;levels++}
+ if(s.level>=25){s.xp=0}
+ if(levels){setTimeout(()=>toast(`¡Subiste ${levels} nivel${levels>1?'es':''}! Salud restaurada ❤️`),150)}
+}
+const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+function getQuestion(cat){
+ let l=s.level,a,b,ans,q,opts,explain;if(typeof cat!=="number")cat=Math.max(0,unlocks.filter(u=>l>=u.level).length-1);
+ if(cat===0){
+  let typ=rnd(0,3);a=rnd(2,30);b=rnd(2,20);
+  if(typ===0){ans=a+b;q=`${a} + ${b} = ?`;explain=`${a} + ${b} = ${ans}`;}
+  if(typ===1){if(a<b)[a,b]=[b,a];ans=a-b;q=`${a} − ${b} = ?`;explain=`${a} − ${b} = ${ans}`;}
+  if(typ===2){a=rnd(2,12);b=rnd(2,10);ans=a*b;q=`${a} × ${b} = ?`;explain=`${a} × ${b} = ${ans}`;}
+  if(typ===3){b=rnd(2,10);ans=rnd(2,12);a=b*ans;q=`${a} ÷ ${b} = ?`;explain=`${a} ÷ ${b} = ${ans}`;}
+ }else if(cat===1){
+  a=rnd(2,9);if(Math.random()<.5){ans=a*a;q=`${a}² = ?`;explain=`${a} × ${a} = ${ans}`;}else{ans=a;q=`√${a*a} = ?`;explain=`La raíz cuadrada de ${a*a} es ${a}.`;}
+ }else if(cat===2){
+  a=rnd(2,8);ans=rnd(2,9);b=a*ans;q=`Resuelve: ${a}x = ${b}. ¿Cuánto vale x?`;explain=`Divide ambos lados entre ${a}: x = ${b}/${a} = ${ans}.`;
+ }else if(cat===3){
+  a=rnd(2,5);b=rnd(1,8);ans=a*2+b;q=`Si f(x) = ${a}x + ${b}, ¿cuánto vale f(2)?`;explain=`f(2) = ${a}·2 + ${b} = ${ans}.`;
+ }else if(cat===4){
+  a=rnd(2,7);ans=a*2;q=`¿Cuál es la derivada de f(x) = x² + ${a}x?`;explain=`La derivada de x² es 2x y la de ${a}x es ${a}: f'(x) = 2x + ${a}. Para x = 0, el valor es ${a}.`;
+  // Use an unambiguous derivative-at-zero question instead.
+  q=`Si f(x) = x² + ${a}x, ¿cuánto vale f'(0)?`;ans=a;
+ }else if(cat===5){
+  a=rnd(2,8);ans=a;q=`¿Cuál es el coeficiente de x² en una antiderivada de ${2*a}x?`;explain=`Una antiderivada es ${a}x² + C, así que el coeficiente de x² es ${a}.`;
+ }else{
+  a=rnd(2,8);ans=a;q=`¿Cuál es el límite de (x² − ${a*a})/(x − ${a}) cuando x tiende a ${a}?`;explain=`Factoriza: (x²−${a*a})/(x−${a}) = x + ${a}. Al sustituir x=${a}, da ${2*a}.`;ans=2*a;
+ }
+ if(!explain)explain=`La respuesta correcta es ${ans}.`;
+ opts=new Set([ans]);while(opts.size<4){let d=rnd(1,Math.max(4,Math.ceil(Math.abs(ans)*.35)));opts.add(Math.random()<.5?ans+d:Math.max(0,ans-d))}
+ return {q,ans,opts:[...opts].sort(()=>Math.random()-.5),explain};
+}
+function startBattle(force){
+ if(s.battle)return setPage("battle");
+ if(s.hp<=0){s.hp=Math.ceil(s.maxHp*.5);toast("Te recuperaste en el campamento.");}
+ let c;
+ if(dev&&typeof force==="number"&&creatureById(force)){c=creatureById(force);s.zone=c.z;update()}
+ else{
+  let bossC=zoneBoss(s.zone),boss=(s.wins>0&&s.wins%5===0&&!best.found[bossC.id]&&Math.random()<.35);
+  c=boss?bossC:zoneEnemies(s.zone)[rnd(0,zoneEnemies(s.zone).length-1)];
+ }
+ let z=c.z,base=18+s.level*5+(z*12),boss=!!c.boss;
+ s.battle={cid:c.id,enemy:c.n,emoji:c.e,hp:boss?base*2:base,max:boss?base*2:base,damage:Math.max(5,5+z*2+Math.floor(s.level/4)),boss,weakness:c.w,q:null,selectedCat:null,answered:false};
+ persist();setPage("battle");
+}
+function battle(){
+  if(!s.battle){render(`<h2>⚔️ Arena de combate</h2><p class="sub">Elige una operación en cada turno. Las debilidades matemáticas importan.</p><div class="card" style="text-align:center;padding:28px"><div class="bigemoji">🗡️</div><h3>¿Listo para el desafío?</h3><p class="muted">Selecciona libremente qué operación usarás para atacar. Si fallas, la criatura contraataca.</p><button class="primary" onclick="MM.startBattle()">Iniciar combate</button></div>${dev?devSpawner():""}`);return}
+  let b=s.battle,q=b.q;
+  const available=unlocks.map((u,i)=>({...u,i})).filter(u=>s.level>=u.level);
+  const choices=available.map(u=>`<button class="${b.selectedCat===u.i?'success':''}" onclick="MM.chooseOperation(${u.i})" ${q?'disabled':''}>${u.name}<br><span class="tiny">⚔️ ${operationDamage[u.i]} daño base</span></button>`).join("");
+  render(`<div class="row"><div><h2>⚔️ ${b.boss?'JEFE: ':''}Combate</h2><p class="sub" style="margin:0">${zones[s.zone].name}</p></div><span class="tag">${b.boss?'JEFE':'ENCUENTRO'}</span></div>
+  <div class="battle">
+  <div class="combatant"><div class="tiny">TU AVENTURERO</div><div class="monster">🧙</div><b>${s.name}</b><div class="healthline"><span>❤️ ${s.hp}/${s.maxHp}</span><span>Nv. ${s.level}</span></div><div class="bar"><i style="width:${s.hp/s.maxHp*100}%"></i></div></div>
+  <div class="combatant"><div class="tiny">${b.boss?'GUARDIÁN':'CRIATURA SALVAJE'}</div><div class="monster">${b.emoji}</div><b>${b.enemy}</b><div class="healthline"><span>❤️ ${b.hp}/${b.max}</span><span>${b.boss?'Peligroso':'Enemigo'}</span></div><div class="bar"><i style="width:${b.hp/b.max*100}%;background:linear-gradient(90deg,#e75e77,#ff9a8a)"></i></div></div>
+  </div>
+  <div class="card"><h3>🧠 Elige tu operación de ataque</h3><p class="tiny">Daño = daño base + ataque. Cada criatura reacciona distinto: experimenta con tus operaciones.</p><div class="grid2">${choices}</div></div>
+  ${q?`<div class="question"><div class="tag">📘 ${operationNames[b.selectedCat].toUpperCase()}</div><div class="equation">${q.q}</div><div class="answers">${q.opts.map(v=>`<button onclick="MM.answer(${v})" ${b.answered?'disabled':''}>${v}</button>`).join("")}</div><div class="feedback" id="feedback"></div><div class="tiny" id="explain"></div></div>`:`<div class="notice">Elige una de las operaciones desbloqueadas para generar tu ejercicio y atacar.</div>`}
+  <div class="row"><span class="tiny">⚔️ Ataque ${s.attack} · 🛡️ Defensa ${s.defense}</span><button onclick="MM.usePotion()" ${s.potions<1||s.hp===s.maxHp?'disabled':''}>🧪 Poción (${s.potions})</button></div>
+  <div class="actions"><button onclick="MM.flee()">Retirarse</button></div>`);
+}
+function chooseOperation(cat){
+  let b=s.battle;if(!b||b.q||s.level<unlocks[cat].level)return;
+  b.selectedCat=cat;b.q=getQuestion(cat);b.answered=false;persist();battle();
+}
+function answer(v){
+ let b=s.battle;if(!b||b.answered)return;b.answered=true;
+ if(v===b.q.ans){
+  let base=operationDamage[b.selectedCat],weak=b.selectedCat===b.weakness;
+   let dmg=Math.round((base+s.attack)*(weak?1.8:1));b.hp=Math.max(0,b.hp-dmg);
+   $("feedback").textContent=weak?`¡SÚPER EFECTIVO! Infliges ${dmg} de daño (×1,8).`:`¡Correcto! Infliges ${dmg} de daño.`;
+   $("feedback").className="feedback good";$("explain").textContent=b.q.explain;
+  if(b.hp<=0){let xp=b.boss?85:25+s.level*3,coins=b.boss?45:rnd(8,18);s.wins++;s.coins+=coins;if(b.boss)s.missions.boss=true;s.battle=null;let isNew=discover(b.cid),cr=creatureById(b.cid);gainXP(xp);persist();update();setTimeout(()=>{render(`<h2>🏆 ¡Victoria!</h2><div class="card" style="text-align:center;padding:28px"><div class="bigemoji">🎉</div><h3>¡Has derrotado a la criatura!</h3><p class="good">+${xp} XP · +${coins} monedas</p>${dexResult(cr,isNew)}<button class="primary" onclick="MM.page('home')">Volver al campamento</button> <button onclick="MM.startBattle()">Otro combate</button></div>`);},500);return}
+ }else{
+  let dmg=Math.max(1,b.damage-s.defense);s.hp=Math.max(0,s.hp-dmg);$("feedback").textContent=`No es correcto. ${b.enemy} te golpea: −${dmg} HP.`;$("feedback").className="feedback bad";$("explain").textContent=`Respuesta: ${b.q.ans}. ${b.q.explain}`;
+  if(s.hp<=0){s.hp=Math.ceil(s.maxHp*.5);s.coins=Math.max(0,s.coins-5);s.battle=null;toast("Te han vencido. Volviste al campamento con media vida.");persist();update();setTimeout(()=>home(),500);return}
+ }
+ persist();update();setTimeout(()=>{if(s.battle){s.battle.q=null;s.battle.selectedCat=null;s.battle.answered=false;if(currentPage==="battle")battle()}},1600);
+}
+function flee(){if(!s.battle)return;s.battle=null;persist();setPage("home");toast("Te retiraste del combate.")}
+function showIntro(){
+ if(s.seenIntro)return;
+ $("modalRoot").innerHTML=`<div class="modalback"><div class="modal"><div class="bigemoji">🧙‍♂️✨</div><h2>¡Bienvenido a MathMon!</h2><p class="muted">El mundo está lleno de criaturas que solo pueden ser derrotadas con conocimiento. Aprende operaciones, gana experiencia y conviértete en una leyenda.</p><label class="tiny">¿Cómo te llamas, aventurero?</label><input id="nameInput" class="input" maxlength="18" placeholder="Tu nombre" value="Aventurero"><button class="primary" style="width:100%" id="beginBtn">Comenzar aventura</button></div></div>`;
+ $("beginBtn").onclick=()=>{s.name=$("nameInput").value.trim()||"Aventurero";s.seenIntro=true;persist();$("modalRoot").innerHTML="";update();home()};
+}
+
+function discover(id){if(best.found[id])return false;best.found[id]=Date.now();persistBest();return true}
+function weakHtml(c){return `<b>${operationNames[c.w]}</b><div class="tiny">⚔️ Operación efectiva: ${operationNames[c.w]} (${unlocks[c.w].desc.replace(/\.$/,"")}) · ×1,8 de daño</div>`}
+function dexResult(c,isNew){
+ if(!c)return "";
+ return isNew?`<div class="dexnew">📖 <b>¡Nueva entrada en el Bestiario!</b><br>Nº ${pad(c.id)} · ${c.e} ${c.n}<div style="margin-top:6px">💡 Debilidad descubierta: ${weakHtml(c)}</div></div><div style="margin-bottom:12px"><button onclick="MM.page('bestiary')">📖 Ver Bestiario</button></div>`:`<p class="tiny">📖 ${c.n} ya está registrada en tu Bestiario.</p>`;
+}
+function dexCard(c,i){
+ const f=!!best.found[c.id];
+ return `<div class="dexcard ${f?'found':'unk'} ${c.boss?'boss':''}" style="animation-delay:${i*45}ms"><div class="row"><span class="dexnum">Nº ${pad(c.id)}</span><span class="tag ${f?'tagok':''}">${f?'✔ Descubierto':'? Desconocido'}</span></div><div class="dexpic ${f?'':'sil'}">${c.e}</div><h3>${f?c.n:'???'}</h3><div class="tiny">📍 ${zones[c.z].name}${c.boss?' · 👑 Jefe':''}</div>${f?`<p class="tiny" style="margin:8px 0 0">${c.d}</p><div class="dexweak"><div class="tiny">💡 DEBILIDAD MATEMÁTICA</div>${weakHtml(c)}</div>`:`<p class="tiny" style="margin:8px 0 0">Datos no registrados.</p><div class="dexweak lock"><div class="tiny">🔒 Debilidad desconocida</div><div class="tiny">Derrota a esta criatura para revelarla.</div></div>`}</div>`;
+}
+function bestiary(){
+ const total=creatures.length,found=creatures.filter(c=>best.found[c.id]).length,pct=Math.round(found/total*100);
+ render(`<h2>📖 Bestiario</h2><p class="sub">Registro de criaturas de MathMon. Derrota a cada una para anotarla y revelar su debilidad matemática.</p>
+ <div class="card dexhead"><div class="row"><div><span class="tag">PROGRESO DE DESCUBRIMIENTO</span><h3 style="margin-top:8px">${found} / ${total} criaturas descubiertas</h3></div><div class="dexpct">${pct}%</div></div><div class="bar dexbar"><i style="width:${pct}%"></i></div>${found===total?'<p class="good" style="margin:10px 0 0"><b>🏆 ¡Bestiario completo!</b></p>':''}</div>
+ ${zones.map((z,zi)=>{const l=creatures.filter(c=>c.z===zi);return `<div class="dexzone"><h3>${z.emoji} ${z.name}</h3><span class="tag">${l.filter(c=>best.found[c.id]).length}/${l.length}</span></div><div class="dexgrid">${l.map((c,i)=>dexCard(c,i)).join("")}</div>`}).join("")}`);
+}
+function devSpawner(){
+ return `<div class="card" style="margin-top:14px"><h3>👹 Invocar criatura</h3><p class="tiny">Acceso a todos los enemigos y jefes de todas las zonas.</p><select id="devCreature" class="input"><option value="">🎲 Aleatoria (zona actual)</option>${zones.map((z,i)=>`<optgroup label="${z.emoji} ${z.name}">${creatures.filter(c=>c.z===i).map(c=>`<option value="${c.id}">Nº ${pad(c.id)} ${c.e} ${c.n}${c.boss?' (JEFE)':''}</option>`).join("")}</optgroup>`).join("")}</select><button class="primary" onclick="MM.devFight()">⚔️ Iniciar combate</button></div>`;
+}
+function devPage(){
+ render(`<h2>🛠️ Modo desarrollador</h2><p class="sub">Sesión local de pruebas. Tu progreso normal está protegido y se restaura al cerrar sesión.</p>
+ <div class="card"><h3>📊 Estado de prueba</h3><div class="devstats"><div>Nivel<b>${s.level}</b></div><div>Monedas<b>${s.coins}</b></div><div>Pociones<b>${s.potions}</b></div><div>Salud<b>${s.hp}/${s.maxHp}</b></div><div>Ataque<b>${s.attack}</b></div><div>Defensa<b>${s.defense}</b></div></div><p class="tiny" style="margin:10px 0 0">Todas las operaciones y zonas están desbloqueadas.</p></div>
+ ${devSpawner()}
+ <div class="card" style="margin-top:14px"><h3>🧰 Herramientas</h3><div class="actions" style="margin-top:0"><button class="success" onclick="MM.devHeal()">❤️ Restaurar recursos</button><button onclick="MM.devReveal(true)">👁️ Revelar Bestiario</button><button onclick="MM.devReveal(false)">🙈 Ocultar Bestiario</button><button class="danger" onclick="MM.devLogout()">🚪 Cerrar sesión</button></div></div>
+ <div class="notice">🔒 Los descubrimientos del Bestiario hechos durante esta sesión no se guardan. Este acceso es una demostración local de pruebas, no un sistema de autenticación seguro.</div>`);
+}
+function showDevLogin(){
+ $("modalRoot").innerHTML=`<div class="modalback"><div class="modal" id="devModal"><div class="bigemoji">🛠️</div><h2>Acceso de desarrollador</h2><p class="muted">Modo local de pruebas: desbloquea todas las mecánicas sin tocar tu progreso normal.</p><label class="tiny" for="devUser">Usuario</label><input id="devUser" class="input" autocomplete="off" autocapitalize="off" spellcheck="false"><label class="tiny" for="devPass">Contraseña</label><input id="devPass" type="password" class="input" autocomplete="off"><div class="errmsg" id="devErr"></div><div class="actions" style="margin-top:0"><button class="primary" id="devLoginBtn" style="flex:1">Iniciar sesión</button><button id="devCancelBtn">Cancelar</button></div></div></div>`;
+ const go=()=>{
+  if($("devUser").value.trim()===DEV_USER&&$("devPass").value===DEV_PASS){$("modalRoot").innerHTML="";enterDev()}
+  else{$("devErr").textContent="⚠️ Usuario o contraseña incorrectos.";const m=$("devModal");m.classList.remove("shake");void m.offsetWidth;m.classList.add("shake")}
+ };
+ $("devLoginBtn").onclick=go;
+ $("devCancelBtn").onclick=()=>{$("modalRoot").innerHTML="";showIntro()};
+ ["devUser","devPass"].forEach(id=>$(id).addEventListener("keydown",e=>{if(e.key==="Enter")go()}));
+ $("devUser").focus();
+}
+function enterDev(){
+ if(dev)return;
+ normalBackup={s:JSON.parse(JSON.stringify(s)),best:JSON.parse(JSON.stringify(best))};
+ s={...JSON.parse(JSON.stringify(s)),seenIntro:true,level:25,xp:0,maxHp:500,hp:500,attack:50,defense:20,coins:9999,potions:99,battle:null};
+ best={found:{...best.found}};
+ dev=true;document.body.classList.add("devon");$("devBanner").classList.remove("hidden");
+ update();setPage("dev");toast("🛠️ Modo desarrollador activado");
+}
+function devLogout(){
+ if(!dev)return;
+ s=normalBackup.s;best=normalBackup.best;normalBackup=null;dev=false;
+ document.body.classList.remove("devon");$("devBanner").classList.add("hidden");
+ update();setPage("home");showIntro();toast("Sesión cerrada. Tu progreso normal sigue intacto.");
+}
+function devFight(){if(!dev)return;const v=$("devCreature").value;startBattle(v===""?undefined:+v)}
+function devHeal(){if(!dev)return;s.hp=s.maxHp;s.coins=9999;s.potions=99;update();devPage();toast("Recursos restaurados")}
+function devReveal(on){if(!dev)return;best.found={};if(on)creatures.forEach(c=>best.found[c.id]=Date.now());toast(on?"Bestiario revelado (solo en esta sesión)":"Bestiario oculto (solo en esta sesión)")}
+$("devLogoutBtn").onclick=devLogout;
+window.MM={devFight,devHeal,devReveal,devLogout,page:setPage,startBattle,chooseOperation,answer,enterZone,explore,claim,usePotion,buyPotion,flee};
+update();showIntro();home();
+})();
+</script>
+</body></html>
